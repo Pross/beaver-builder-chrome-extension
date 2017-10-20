@@ -13,18 +13,24 @@ chrome.runtime.onMessage.addListener(
 			version = ParseResult( result )
 			if( version ) {
 				bboutput = 'Beaver Builder version ' + version + ' detected!\n'
+			} else {
+				bboutput = 'Beaver Builder not found.\n'
 			}
 
 			result = GetResult( bbtheme )
 			version = ParseResult( result )
 			if( version ) {
 				bboutput += 'Beaver Theme version ' + version + ' detected!\n'
+			} else {
+				bboutput += 'Beaver Theme not found.\n'
 			}
 
 			result = GetResult( themer )
 			version = ParseResult( result )
 			if( version ) {
 				bboutput += 'Beaver Themer version ' + version + ' detected!\n'
+			} else {
+				bboutput += 'Beaver Themer not found.\n'
 			}
 
 			if( bboutput ) {
@@ -35,7 +41,11 @@ chrome.runtime.onMessage.addListener(
 );
 
 function ParseResult( data ) {
+
 	if( data.length < 1 ) {
+		return false;
+	}
+	if( ! data ) {
 		return false;
 	}
 	var lines = data.split("\n");
@@ -48,7 +58,7 @@ function ParseResult( data ) {
 }
 
 function GetResult( url ) {
-     var result = null;
+     var result = false;
      $.ajax({
         url: url,
         type: 'get',
