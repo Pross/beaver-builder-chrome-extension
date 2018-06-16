@@ -6,6 +6,7 @@ chrome.runtime.onMessage.addListener(
 			bbplugin = window.location.href + '/wp-content/plugins/bb-plugin/changelog.txt'
 			bbtheme = window.location.href + '/wp-content/themes/bb-theme/changelog.txt'
 			themer = window.location.href + '/wp-content/plugins/bb-theme-builder/changelog.txt'
+      free = window.location.href + '/wp-content/plugins/beaver-builder-lite-version/changelog.txt'
 
 			var bboutput = false;
 
@@ -31,6 +32,14 @@ chrome.runtime.onMessage.addListener(
 				bboutput += 'Beaver Themer version ' + version + ' detected!\n'
 			} else {
 				bboutput += 'Beaver Themer not found.\n'
+			}
+      
+      result = GetResult( free )
+			version = ParseResult( result )
+			if( version ) {
+				bboutput += 'Beaver Lite version ' + version + ' detected!\n'
+			} else {
+				bboutput += 'Beaver Lite not found.\n'
 			}
 
 			if( bboutput ) {
