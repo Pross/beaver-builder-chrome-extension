@@ -12,20 +12,20 @@ chrome.runtime.onMessage.addListener(
       urlParts = url.replace('http://','').replace('https://','').split(/[/?#]/);
       domain = urlParts[0];
 
-			var bboutput = false;
+			var bboutput = '<h4>Scan results for ' + domain + '</h4>';
 
 			result = GetResult( bbplugin )
 			version = ParseResult( result )
 			if( version ) {
-				bboutput = 'Beaver Builder version <strong>' + version + '</strong><br />'
+				bboutput += 'Beaver Builder <strong>' + version + '</strong><br />'
 			} else {
-				bboutput = 'Beaver Builder not found.<br />'
+				bboutput += 'Beaver Builder not found.<br />'
 			}
 
 			result = GetResult( bbtheme )
 			version = ParseResult( result )
 			if( version ) {
-				bboutput += 'Beaver Theme version <strong>' + version + '</strong><br />'
+				bboutput += 'Beaver Theme <strong>' + version + '</strong><br />'
 			} else {
 				bboutput += 'Beaver Theme not found.<br />'
 			}
@@ -33,7 +33,7 @@ chrome.runtime.onMessage.addListener(
 			result = GetResult( themer )
 			version = ParseResult( result )
 			if( version ) {
-				bboutput += 'Beaver Themer version <strong>' + version + '</strong><br />'
+				bboutput += 'Beaver Themer <strong>' + version + '</strong><br />'
 			} else {
 				bboutput += 'Beaver Themer not found.<br />'
 			}
@@ -41,25 +41,23 @@ chrome.runtime.onMessage.addListener(
       result = GetResult( free )
 			version = ParseResult( result )
 			if( version ) {
-				bboutput += 'Beaver Lite version <strong>' + version + '</strong><br />'
+				bboutput += 'Beaver Lite <strong>' + version + '</strong><br />'
 			} else {
 				bboutput += 'Beaver Lite not found.<br />'
 			}
-      
-      lookup = 'https://api.hackertarget.com/reverseiplookup/?q=' + domain
-      domains = GetResult(lookup)
-      if( domains.length > 0 ) {
-        count = domains.split(/\r\n|\r|\n/).length - 1
-        bboutput += '<strong>' + count + '</strong> sites detected on this server.<br />'
-        url = 'https://www.yougetsignal.com/tools/web-sites-on-web-server/?remoteAddress=' + domain
-        bboutput += '<a target="_blank" href="' + url + '">List all domains.</a>'
-      }
 
 			if( bboutput ) {
-        var myModal = new Modal({
-          title: 'Test Results for ' + domain,
-          content: bboutput
-        }).show();
+
+        var modal = new tingle.modal({
+          'footer': true,
+          'closeMethods': ['overlay', 'escape']
+        });
+
+        url = 'https://www.yougetsignal.com/tools/web-sites-on-web-server/?remoteAddress=' + domain
+        footer = '<a target="_blank" href="' + url + '">List all domains for this server.</a>'
+        modal.setFooterContent(footer)
+        modal.setContent(bboutput);
+        modal.open();
 			}
     }
   }

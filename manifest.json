@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "BB Detector",
   "description": "Detects Beaver Builder version string.",
-  "version": "0.5",
+  "version": "0.6",
   "background": {
     "scripts": ["background.js"]
   },
@@ -11,7 +11,8 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["jquery.min.js", "modal.min.js", "content.js"]
+      "js": ["jquery.min.js", "tingle.min.js", "content.js"],
+      "css": ["tingle.min.css"]
     }
   ],
   "browser_action": {
