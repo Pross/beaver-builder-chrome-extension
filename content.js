@@ -3,10 +3,13 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if( request.message === "clicked_browser_action" ) {
 
-			bbplugin = window.location.href + '/wp-content/plugins/bb-plugin/changelog.txt'
-			bbtheme = window.location.href + '/wp-content/themes/bb-theme/changelog.txt'
-			themer = window.location.href + '/wp-content/plugins/bb-theme-builder/changelog.txt'
-      free = window.location.href + '/wp-content/plugins/beaver-builder-lite-version/changelog.txt'
+			bbplugin = window.location.href + 'wp-content/plugins/bb-plugin/changelog.txt'
+      bbtheme = window.location.href + 'wp-content/themes/bb-theme/changelog.txt'
+      themer = window.location.href + 'wp-content/plugins/bb-theme-builder/changelog.txt'
+      free = window.location.href + 'wp-content/plugins/beaver-builder-lite-version/changelog.txt'
+      
+      agency = window.location.href + 'wp-content/plugins/bb-plugin/extensions/fl-builder-white-label/css/fl-builder-white-label-settings.css'
+      pro = window.location.href + 'wp-content/plugins/bb-plugin/extensions/fl-builder-multisite/fl-builder-multisite.php'
       
       url = window.location.href;
       urlParts = url.replace('http://','').replace('https://','').split(/[/?#]/);
@@ -15,9 +18,13 @@ chrome.runtime.onMessage.addListener(
 			var bboutput = '<h4>Scan results for ' + domain + '</h4>';
 
 			result = GetResult( bbplugin )
+      
+      sub = GetSub( agency, pro )
+      
 			version = ParseResult( result )
-			if( version ) {
-				bboutput += 'Beaver Builder <strong>' + version + '</strong><br />'
+	
+  		if( version ) {
+				bboutput += 'Beaver Builder <strong>' + version + '</strong> ( ' + sub + ' )<br />'
 			} else {
 				bboutput += 'Beaver Builder not found.<br />'
 			}
@@ -39,6 +46,7 @@ chrome.runtime.onMessage.addListener(
 			}
       
       result = GetResult( free )
+
 			version = ParseResult( result )
 			if( version ) {
 				bboutput += 'Beaver Lite <strong>' + version + '</strong><br />'
@@ -65,6 +73,10 @@ chrome.runtime.onMessage.addListener(
 
 function ParseResult( data ) {
 
+  if($.isNumeric(data)) {
+    return false;
+  }
+
 	if( data.length < 1 ) {
 		return false;
 	}
@@ -80,6 +92,23 @@ function ParseResult( data ) {
 	return false;
 }
 
+function GetSub( agency, pro ) {
+  
+  agency = GetResult( agency );
+  pro = GetResult( pro )
+  
+  if( ! $.isNumeric(agency) && agency ) {
+    return 'Agency';
+  }
+  
+  if( 500 === pro ) {
+    return 'Pro';
+  }
+  
+  return 'Standard'
+  
+}
+
 function GetResult( url ) {
      var result = false;
      $.ajax({
@@ -87,8 +116,14 @@ function GetResult( url ) {
         type: 'get',
         dataType: 'html',
         async: false,
+        timeout: 3000,
         success: function(data) {
             result = data;
+        },
+        complete: function(xhr,status) {
+          if( xhr.status === 500 || xhr.status === 404 ) {
+            result = xhr.status  
+          }      
         }
      });
      return result;
