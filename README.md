@@ -10,5 +10,5 @@
 A new Tampermonkey item will be added to the right click menu with a link to execute the script and scan the current site.
 
 ## Right click
-![Image of Right Click]
-(https://rawcdn.githack.com/Pross/beaver-builder-chrome-extension/master/right-click.png)
+
+![Image of Right Click](https://rawcdn.githack.com/Pross/beaver-builder-chrome-extension/master/right-click.png)
