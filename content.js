@@ -53,6 +53,16 @@ chrome.runtime.onMessage.addListener(
 			} else {
 				bboutput += 'Beaver Lite not found.<br />'
 			}
+      
+      result = GetResult( url )
+      
+      cache = result.match(/<\/html>(.*)$/s)
+      if( typeof( cache[1] ) !== "undefined" && cache[1] !== null ) {
+    		bboutput += '<br /><strong><em>Possible Cache Plugin Detected</em></strong><br /><pre>' + escapeHtml(cache[1]) + '</pre>'
+    	}
+      
+      
+      
 
 			if( bboutput ) {
 
@@ -107,6 +117,22 @@ function GetSub( agency, pro ) {
   
   return 'Standard'
   
+}
+
+function escapeHtml (string) {
+  return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+    var entityMap = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+      '/': '&#x2F;',
+      '`': '&#x60;',
+      '=': '&#x3D;'
+    };
+    return entityMap[s];
+  });
 }
 
 function GetResult( url ) {
