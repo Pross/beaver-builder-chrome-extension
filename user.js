@@ -74,7 +74,7 @@
       result = GetResult( url )
 
       var cache = result.match(/<\/html>(.*)$/s)
-      if( typeof( cache[1] ) !== "undefined" && cache[1] !== null ) {
+      if( typeof( cache[1] ) !== "undefined" && cache[1] !== null && '' !== cache[1] && cache[1].length > 10 ) {
     		bboutput += '<br /><strong><em>Possible Cache Plugin Detected</em></strong><br /><pre>' + escapeHtml(cache[1]) + '</pre>'
     	}
 
