@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.1
+// @version         0.2
 // @author          Simon
 // @include         *
 // @grant           GM_getResourceText
@@ -10,6 +10,8 @@
 // @run-at          context-menu
 // @require         https://rawcdn.githack.com/robinparisi/tingle/master/dist/tingle.min.js
 // @resource        tingleCSS https://rawcdn.githack.com/robinparisi/tingle/master/dist/tingle.min.css
+// @updateURL       https://raw.githubusercontent.com/Pross/beaver-builder-chrome-extension/master/user.js
+// @downloadURL     https://raw.githubusercontent.com/Pross/beaver-builder-chrome-extension/master/user.js
 // @require         https://code.jquery.com/jquery-1.11.0.min.js
 // ==/UserScript==]
 
