@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.2
+// @version         0.3
 // @author          Simon
 // @include         *
 // @grant           GM_getResourceText
@@ -112,7 +112,7 @@ function ParseResult( data ) {
 	var lines = data.split("\n");
 	line = lines[0]
 	versions = line.match(/<h4>([a-z0-9\.-]+)/)
-	if( typeof( versions[1] ) != "undefined" && versions[1] !== null ) {
+	if( versions !== null && typeof( versions[1] ) != "undefined" ) {
 		return versions[1];
 	}
 	return false;
