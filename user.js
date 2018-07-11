@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.3
+// @version         0.4
 // @author          Simon
 // @include         *
 // @grant           GM_getResourceText
@@ -17,71 +17,61 @@
 
 (function() {
     'use strict';
-      var bbplugin = window.location.href + 'wp-content/plugins/bb-plugin/changelog.txt'
-      var bbtheme = window.location.href + 'wp-content/themes/bb-theme/changelog.txt'
-      var themer = window.location.href + 'wp-content/plugins/bb-theme-builder/changelog.txt'
-      var free = window.location.href + 'wp-content/plugins/beaver-builder-lite-version/changelog.txt'
+    var bbplugin = window.location.href + 'wp-content/plugins/bb-plugin/changelog.txt'
+    var bbtheme = window.location.href + 'wp-content/themes/bb-theme/changelog.txt'
+    var themer = window.location.href + 'wp-content/plugins/bb-theme-builder/changelog.txt'
+    var free = window.location.href + 'wp-content/plugins/beaver-builder-lite-version/changelog.txt'
+    var agency = window.location.href + 'wp-content/plugins/bb-plugin/extensions/fl-builder-white-label/css/fl-builder-white-label-settings.css'
+    var pro = window.location.href + 'wp-content/plugins/bb-plugin/extensions/fl-builder-multisite/fl-builder-multisite.php'
+    var url = window.location.href;
+    var urlParts = url.replace('http://','').replace('https://','').split(/[/?#]/);
+    var domain = urlParts[0];
+    var bboutput = '<h4>Scan results for ' + domain + '</h4>';
+    var result = GetResult( bbplugin )
+    var sub = GetSub( agency, pro )
+    var tingleCSS = GM_getResourceText ("tingleCSS");
+    var version = ParseResult( result )
 
-      var agency = window.location.href + 'wp-content/plugins/bb-plugin/extensions/fl-builder-white-label/css/fl-builder-white-label-settings.css'
-      var pro = window.location.href + 'wp-content/plugins/bb-plugin/extensions/fl-builder-multisite/fl-builder-multisite.php'
+    if( version ) {
+        bboutput += 'Beaver Builder <strong>' + version + '</strong> ( ' + sub + ' )<br />'
+    } else {
+        bboutput += 'Beaver Builder not found.<br />'
+    }
 
-      var url = window.location.href;
-      var urlParts = url.replace('http://','').replace('https://','').split(/[/?#]/);
-      var domain = urlParts[0];
+    result = GetResult( bbtheme )
+    version = ParseResult( result )
+    if( version ) {
+        bboutput += 'Beaver Theme <strong>' + version + '</strong><br />'
+    } else {
+        bboutput += 'Beaver Theme not found.<br />'
+    }
 
-	  var bboutput = '<h4>Scan results for ' + domain + '</h4>';
+    result = GetResult( themer )
+    version = ParseResult( result )
 
-      var result = GetResult( bbplugin )
+    if( version ) {
+        bboutput += 'Beaver Themer <strong>' + version + '</strong><br />'
+    } else {
+        bboutput += 'Beaver Themer not found.<br />'
+    }
 
-      var sub = GetSub( agency, pro )
+    result = GetResult( free )
+    version = ParseResult( result )
 
-      var tingleCSS = GM_getResourceText ("tingleCSS");
+    if( version ) {
+        bboutput += 'Beaver Lite <strong>' + version + '</strong><br />'
+    } else {
+        bboutput += 'Beaver Lite not found.<br />'
+    }
 
+    result = GetResult( url )
 
-	  var version = ParseResult( result )
+    var cache = result.match(/<\/html>(.*)$/s)
+    if( typeof( cache[1] ) !== "undefined" && cache[1] !== null && '' !== cache[1] && cache[1].length > 10 ) {
+        bboutput += '<br /><strong><em>Possible Cache Plugin Detected</em></strong><br /><pre>' + escapeHtml(cache[1]) + '</pre>'
+    }
 
-  		if( version ) {
-				bboutput += 'Beaver Builder <strong>' + version + '</strong> ( ' + sub + ' )<br />'
-			} else {
-				bboutput += 'Beaver Builder not found.<br />'
-			}
-
-			result = GetResult( bbtheme )
-			version = ParseResult( result )
-			if( version ) {
-				bboutput += 'Beaver Theme <strong>' + version + '</strong><br />'
-			} else {
-				bboutput += 'Beaver Theme not found.<br />'
-			}
-
-			result = GetResult( themer )
-			version = ParseResult( result )
-			if( version ) {
-				bboutput += 'Beaver Themer <strong>' + version + '</strong><br />'
-			} else {
-				bboutput += 'Beaver Themer not found.<br />'
-			}
-
-      result = GetResult( free )
-
-			version = ParseResult( result )
-			if( version ) {
-				bboutput += 'Beaver Lite <strong>' + version + '</strong><br />'
-			} else {
-				bboutput += 'Beaver Lite not found.<br />'
-			}
-
-      result = GetResult( url )
-
-      var cache = result.match(/<\/html>(.*)$/s)
-      if( typeof( cache[1] ) !== "undefined" && cache[1] !== null && '' !== cache[1] && cache[1].length > 10 ) {
-    		bboutput += '<br /><strong><em>Possible Cache Plugin Detected</em></strong><br /><pre>' + escapeHtml(cache[1]) + '</pre>'
-    	}
-
-
-
-
-			if( bboutput ) {
+    if( bboutput ) {
 
         var modal = new tingle.modal({
           'footer': true,
@@ -94,14 +84,14 @@
         modal.setFooterContent(footer)
         modal.setContent(bboutput);
         modal.open();
-			}
+    }
 })();
 
 function ParseResult( data ) {
 
-  if($.isNumeric(data)) {
-    return false;
-  }
+    if($.isNumeric(data)) {
+        return false;
+    }
 
 	if( data.length < 1 ) {
 		return false;
@@ -110,8 +100,8 @@ function ParseResult( data ) {
 		return false;
 	}
 	var lines = data.split("\n");
-	line = lines[0]
-	versions = line.match(/<h4>([a-z0-9\.-]+)/)
+	var line = lines[0]
+	var versions = line.match(/<h4>([a-z0-9\.-]+)/)
 	if( versions !== null && typeof( versions[1] ) != "undefined" ) {
 		return versions[1];
 	}
@@ -120,40 +110,39 @@ function ParseResult( data ) {
 
 function GetSub( agency, pro ) {
 
-  agency = GetResult( agency );
-  pro = GetResult( pro )
+    agency = GetResult( agency );
+    pro = GetResult( pro )
 
-  if( ! $.isNumeric(agency) && agency ) {
+    if( ! $.isNumeric(agency) && agency ) {
     return 'Agency';
-  }
+    }
 
-  if( 500 === pro ) {
-    return 'Pro';
-  }
+    if( 500 === pro ) {
+        return 'Pro';
+    }
 
-  return 'Standard'
-
+    return 'Standard'
 }
 
 function escapeHtml (string) {
-  return String(string).replace(/[&<>"'`=\/]/g, function (s) {
-    var entityMap = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;',
-      '/': '&#x2F;',
-      '`': '&#x60;',
-      '=': '&#x3D;'
-    };
+    return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+        var entityMap = {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+          '/': '&#x2F;',
+          '`': '&#x60;',
+          '=': '&#x3D;'
+        };
     return entityMap[s];
-  });
+    });
 }
 
 function GetResult( url ) {
-     var result = false;
-     $.ajax({
+    var result = false;
+    $.ajax({
         url: url,
         type: 'get',
         dataType: 'html',
@@ -164,9 +153,9 @@ function GetResult( url ) {
         },
         complete: function(xhr,status) {
           if( xhr.status === 500 || xhr.status === 404 ) {
-            result = xhr.status
+              result = xhr.status
           }
         }
-     });
-     return result;
+    });
+    return result;
 }
