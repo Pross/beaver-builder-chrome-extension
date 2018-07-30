@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.4
+// @version         0.5
 // @author          Simon
 // @include         *
 // @grant           GM_getResourceText
@@ -17,20 +17,40 @@
 
 (function() {
     'use strict';
-    var bbplugin = window.location.href + 'wp-content/plugins/bb-plugin/changelog.txt'
-    var bbtheme = window.location.href + 'wp-content/themes/bb-theme/changelog.txt'
-    var themer = window.location.href + 'wp-content/plugins/bb-theme-builder/changelog.txt'
-    var free = window.location.href + 'wp-content/plugins/beaver-builder-lite-version/changelog.txt'
-    var agency = window.location.href + 'wp-content/plugins/bb-plugin/extensions/fl-builder-white-label/css/fl-builder-white-label-settings.css'
-    var pro = window.location.href + 'wp-content/plugins/bb-plugin/extensions/fl-builder-multisite/fl-builder-multisite.php'
+
     var url = window.location.href;
+    var raw_url = url.split(/[/?#]/)[0];
+    var page_content = GetResult( url )
     var urlParts = url.replace('http://','').replace('https://','').split(/[/?#]/);
     var domain = urlParts[0];
+
+    // work out wp-content url
+    var match = page_content.match( /src="(.*\/wp-content\/)/)
+
+    if( typeof( match[1] ) != "undefined" ) {
+        var wp_content = match[1].replace( /(https?:\/\/.*?)\//, raw_url + '/' )
+        console.log('matched')
+    } else {
+        wp_content = window.location.href + 'wp-content'
+        console.log('reverted to window')
+    }
+
+    console.log( 'Scanning using wp-content from ' + wp_content )
+
+    var bbplugin = wp_content + 'plugins/bb-plugin/changelog.txt'
+    var bbtheme = wp_content + 'themes/bb-theme/changelog.txt'
+    var themer = wp_content + 'plugins/bb-theme-builder/changelog.txt'
+    var free = wp_content + 'plugins/beaver-builder-lite-version/changelog.txt'
+    var agency = wp_content + 'plugins/bb-plugin/extensions/fl-builder-white-label/css/fl-builder-white-label-settings.css'
+    var pro = wp_content + 'plugins/bb-plugin/extensions/fl-builder-multisite/fl-builder-multisite.php'
+    
     var bboutput = '<h4>Scan results for ' + domain + '</h4>';
     var result = GetResult( bbplugin )
     var sub = GetSub( agency, pro )
     var tingleCSS = GM_getResourceText ("tingleCSS");
     var version = ParseResult( result )
+
+
 
     if( version ) {
         bboutput += 'Beaver Builder <strong>' + version + '</strong> ( ' + sub + ' )<br />'
@@ -64,7 +84,7 @@
         bboutput += 'Beaver Lite not found.<br />'
     }
 
-    result = GetResult( url )
+    result = page_content
 
     var cache = result.match(/<\/html>(.*)$/s)
     if( typeof( cache[1] ) !== "undefined" && cache[1] !== null && '' !== cache[1] && cache[1].length > 10 ) {
