@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.6
+// @version         0.7
 // @author          Simon
 // @include         *
 // @grant           GM_getResourceText
@@ -26,7 +26,7 @@
     var domain = urlParts[0];
 
     // work out wp-content url
-    var match = page_content.match( /src="(.*\/wp-content\/)/)
+    var match = page_content.match( /src="(.*?\/wp-content\/)/)
 
 
     if( typeof( match[1] ) != "undefined" ) {
