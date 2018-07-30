@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.5
+// @version         0.6
 // @author          Simon
 // @include         *
 // @grant           GM_getResourceText
@@ -19,13 +19,15 @@
     'use strict';
 
     var url = window.location.href;
-    var raw_url = url.split(/[/?#]/)[0];
+    var raw_url_match = url.match( /(https?:\/\/.*?)\// );
+    var raw_url = raw_url_match[1]
     var page_content = GetResult( url )
     var urlParts = url.replace('http://','').replace('https://','').split(/[/?#]/);
     var domain = urlParts[0];
 
     // work out wp-content url
     var match = page_content.match( /src="(.*\/wp-content\/)/)
+
 
     if( typeof( match[1] ) != "undefined" ) {
         var wp_content = match[1].replace( /(https?:\/\/.*?)\//, raw_url + '/' )
@@ -38,6 +40,7 @@
     console.log( 'Scanning using wp-content from ' + wp_content )
 
     var bbplugin = wp_content + 'plugins/bb-plugin/changelog.txt'
+
     var bbtheme = wp_content + 'themes/bb-theme/changelog.txt'
     var themer = wp_content + 'plugins/bb-theme-builder/changelog.txt'
     var free = wp_content + 'plugins/beaver-builder-lite-version/changelog.txt'
