@@ -29,7 +29,7 @@
     var match = page_content.match( /src="(.*?\/wp-content\/)/)
 
 
-    if( typeof( match[1] ) != "undefined" ) {
+    if( match !== null && typeof( match[1] ) != "undefined" ) {
         var wp_content = match[1].replace( /(https?:\/\/.*?)\//, raw_url + '/' )
         console.log('matched')
     } else {
