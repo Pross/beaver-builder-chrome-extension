@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.7
+// @version         0.8
 // @author          Simon
 // @include         *
 // @grant           GM_getResourceText
@@ -46,6 +46,8 @@
     var free = wp_content + 'plugins/beaver-builder-lite-version/changelog.txt'
     var agency = wp_content + 'plugins/bb-plugin/extensions/fl-builder-white-label/css/fl-builder-white-label-settings.css'
     var pro = wp_content + 'plugins/bb-plugin/extensions/fl-builder-multisite/fl-builder-multisite.php'
+
+    var godaddy = wp_content.replace( 'wp-content', 'wp-includes' ) + 'js/tinymce/plugins/compat3x/plugin.min.js'
     
     var bboutput = '<h4>Scan results for ' + domain + '</h4>';
     var result = GetResult( bbplugin )
@@ -53,7 +55,10 @@
     var tingleCSS = GM_getResourceText ("tingleCSS");
     var version = ParseResult( result )
 
+    var gd_bug = fetchHeader( godaddy, 'Last-Modified' )
 
+    var d = new Date(gd_bug);
+    var gd_date = d.getFullYear();
 
     if( version ) {
         bboutput += 'Beaver Builder <strong>' + version + '</strong> ( ' + sub + ' )<br />'
@@ -92,6 +97,11 @@
     var cache = result.match(/<\/html>(.*)$/s)
     if( typeof( cache[1] ) !== "undefined" && cache[1] !== null && '' !== cache[1] && cache[1].length > 10 ) {
         bboutput += '<br /><strong><em>Possible Cache Plugin Detected</em></strong><br /><pre>' + escapeHtml(cache[1]) + '</pre>'
+    }
+
+    if( '2017' == gd_date ) {
+
+        bboutput += '<br /><strong><em>GODADDY BUG DETECTED, Last-Modified: ' + gd_bug + '</em></strong>'
     }
 
     if( bboutput ) {
@@ -161,6 +171,20 @@ function escapeHtml (string) {
         };
     return entityMap[s];
     });
+}
+
+function fetchHeader(url, wch) {
+    try {
+        var req=new XMLHttpRequest();
+        req.open("HEAD", url, false);
+        req.send(null);
+        if(req.status== 200){
+            return req.getResponseHeader(wch);
+        }
+        else return false;
+    } catch(er) {
+        return er.message;
+    }
 }
 
 function GetResult( url ) {
