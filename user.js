@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.8
+// @version         0.9
 // @author          Simon
 // @include         *
 // @grant           GM_getResourceText
@@ -31,7 +31,6 @@
 
     if( match !== null && typeof( match[1] ) != "undefined" ) {
         var wp_content = match[1].replace( /(https?:\/\/.*?)\//, raw_url + '/' )
-        console.log('matched')
     } else {
         wp_content = window.location.href + 'wp-content'
         console.log('reverted to window')
@@ -46,9 +45,10 @@
     var free = wp_content + 'plugins/beaver-builder-lite-version/changelog.txt'
     var agency = wp_content + 'plugins/bb-plugin/extensions/fl-builder-white-label/css/fl-builder-white-label-settings.css'
     var pro = wp_content + 'plugins/bb-plugin/extensions/fl-builder-multisite/fl-builder-multisite.php'
-
     var godaddy = wp_content.replace( 'wp-content', 'wp-includes' ) + 'js/tinymce/plugins/compat3x/plugin.min.js'
-    
+
+    var powerpack = wp_content + 'plugins/bbpowerpack/changelog.txt'
+    var uabb = wp_content + 'plugins/bb-ultimate-addon/changelog.txt'
     var bboutput = '<h4>Scan results for ' + domain + '</h4>';
     var result = GetResult( bbplugin )
     var sub = GetSub( agency, pro )
@@ -82,6 +82,21 @@
     } else {
         bboutput += 'Beaver Themer not found.<br />'
     }
+
+    result = GetResult( powerpack )
+    version = ParseResultPowerpack( result )
+
+    if( version ) {
+        bboutput += 'Power Pack <strong>' + version + '</strong><br />'
+    }
+
+    result = GetResult( uabb )
+    version = ParseResultUabb( result )
+
+    if( version ) {
+        bboutput += 'UABB <strong>' + version + '</strong><br />'
+    }
+
 
     result = GetResult( free )
     version = ParseResult( result )
@@ -135,6 +150,48 @@ function ParseResult( data ) {
 	var lines = data.split("\n");
 	var line = lines[0]
 	var versions = line.match(/<h4>([a-z0-9\.-]+)/)
+	if( versions !== null && typeof( versions[1] ) != "undefined" ) {
+		return versions[1];
+	}
+	return false;
+}
+
+function ParseResultPowerpack( data ) {
+
+    if($.isNumeric(data)) {
+        return false;
+    }
+
+	if( data.length < 1 ) {
+		return false;
+	}
+	if( ! data ) {
+		return false;
+	}
+	var lines = data.split("\n");
+	var line = lines[0]
+	var versions = line.match(/==\s?([a-z0-9\.-]+)/)
+	if( versions !== null && typeof( versions[1] ) != "undefined" ) {
+		return versions[1];
+	}
+	return false;
+}
+
+function ParseResultUabb( data ) {
+
+    if($.isNumeric(data)) {
+        return false;
+    }
+
+	if( data.length < 1 ) {
+		return false;
+	}
+	if( ! data ) {
+		return false;
+	}
+	var lines = data.split("\n");
+	var line = lines[0]
+	var versions = line.match(/Version\s?([0-9\.]+)/)
 	if( versions !== null && typeof( versions[1] ) != "undefined" ) {
 		return versions[1];
 	}
