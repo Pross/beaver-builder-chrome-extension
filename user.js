@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9
+// @version         0.9.1
 // @author          Simon
 // @include         *
 // @grant           GM_getResourceText
@@ -119,6 +119,13 @@
         bboutput += '<br /><strong><em>GODADDY BUG DETECTED, Last-Modified: ' + gd_bug + '</em></strong>'
     }
 
+    headers = fetchAllHeaders( url )
+
+    if( headers ) {
+        bboutput += '<br><a href="#" class="reveal-headers">Click to see HTTP Headers</a>'
+        bboutput += '<div class="headers-data" style="display:none"><pre>' + headers + '</pre></div>'
+    }
+
     if( bboutput ) {
 
         var modal = new tingle.modal({
@@ -132,6 +139,10 @@
         modal.setFooterContent(footer)
         modal.setContent(bboutput);
         modal.open();
+        $('.reveal-headers').on('click', function(){
+            console.log('clicked')
+            $('.headers-data').toggle()
+        })
     }
 })();
 
@@ -236,7 +247,22 @@ function fetchHeader(url, wch) {
         req.open("HEAD", url, false);
         req.send(null);
         if(req.status== 200){
+            headers = req.getAllResponseHeaders().toLowerCase();
             return req.getResponseHeader(wch);
+        }
+        else return false;
+    } catch(er) {
+        return er.message;
+    }
+}
+
+function fetchAllHeaders(url) {
+    try {
+        var req=new XMLHttpRequest();
+        req.open("HEAD", url, false);
+        req.send(null);
+        if(req.status== 200){
+            return req.getAllResponseHeaders().toLowerCase();
         }
         else return false;
     } catch(er) {
