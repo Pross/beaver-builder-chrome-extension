@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.2
+// @version         0.9.3
 // @author          Simon
 // @include         *
 // @grant           GM_getResourceText
@@ -124,7 +124,7 @@
 
         var modal = new tingle.modal({
           'footer': true,
-          'closeMethods': ['button', 'escape']
+          'closeMethods': ['overlay', 'escape']
         });
 
         url = 'https://www.yougetsignal.com/tools/web-sites-on-web-server/?remoteAddress=' + domain
@@ -134,12 +134,20 @@
         modal.setContent(bboutput);
         modal.open();
         $('.reveal-headers').on('click', function(){
-            console.log('clicked')
             $('.headers-data').toggle()
         })
-        $('.tingle-modal-box').css('font-family', 'monospace');
-        $('.tingle-modal-box').css('text-color', 'black');
-        $('.tingle-modal-box__content h4').css('font-family', 'monospace');
+        var font = "system-ui, ---apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif";
+        $('.tingle-modal-box').css('font-family', font);
+        $('.tingle-modal-box').css('font-size', 'initial');
+        $('.tingle-modal-box').css('font-weight', 'initial');
+        $('.tingle-modal-box').css('line-height', '1.5');
+
+          $('.tingle-modal-box__content a').css('color', 'blue');
+          $('.tingle-modal-box__footer a').css('color', 'blue');
+          $('.tingle-modal-box__content h4').css('font-family', font);
+
+
+
     }
 })();
 
