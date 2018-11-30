@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.3
+// @version         0.9.4
 // @author          Simon
 // @include         *
 // @grant           GM_getResourceText
@@ -53,6 +53,8 @@
     var gd_bug = fetchHeader( godaddy, 'Last-Modified' )
     var d = new Date(gd_bug);
     var gd_date = d.getFullYear();
+    var generator = '';
+    var headers = fetchAllHeaders( url )
 
     if( version ) {
         bboutput += 'Beaver Builder <strong>' + version + '</strong> ( ' + sub + ' )<br />'
@@ -101,6 +103,15 @@
         bboutput += 'Beaver Lite not found.<br />'
     }
 
+    $( 'meta[name=generator]' ).each(function( index ) {
+        if( $( this ).attr('content').match( /^(WordPress|ClassicPress)/ ) ) {
+            generator = $( this ).attr('content')
+        }
+    });
+
+    if ( generator ) {
+        bboutput += '<br />' + generator + '<br />'
+    }
     result = page_content
 
     var cache = result.match(/<\/html>(.*)$/s)
@@ -112,8 +123,6 @@
 
         bboutput += '<br /><strong><em>GODADDY BUG DETECTED, Last-Modified: ' + gd_bug + '</em></strong>'
     }
-
-    headers = fetchAllHeaders( url )
 
     if( headers ) {
         bboutput += '<br><a href="#" class="reveal-headers">Click to see HTTP Headers</a>'
@@ -142,9 +151,9 @@
         $('.tingle-modal-box').css('font-weight', 'initial');
         $('.tingle-modal-box').css('line-height', '1.5');
 
-          $('.tingle-modal-box__content a').css('color', 'blue');
-          $('.tingle-modal-box__footer a').css('color', 'blue');
-          $('.tingle-modal-box__content h4').css('font-family', font);
+        $('.tingle-modal-box__content a').css('color', 'blue');
+        $('.tingle-modal-box__footer a').css('color', 'blue');
+        $('.tingle-modal-box__content h4').css('font-family', font);
 
 
 
