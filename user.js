@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.1
+// @version         0.9.2
 // @author          Simon
 // @include         *
 // @grant           GM_getResourceText
@@ -36,17 +36,13 @@
         console.log('reverted to window')
     }
 
-    console.log( 'Scanning using wp-content from ' + wp_content )
-
     var bbplugin = wp_content + 'plugins/bb-plugin/changelog.txt'
-
     var bbtheme = wp_content + 'themes/bb-theme/changelog.txt'
     var themer = wp_content + 'plugins/bb-theme-builder/changelog.txt'
     var free = wp_content + 'plugins/beaver-builder-lite-version/changelog.txt'
     var agency = wp_content + 'plugins/bb-plugin/extensions/fl-builder-white-label/css/fl-builder-white-label-settings.css'
     var pro = wp_content + 'plugins/bb-plugin/extensions/fl-builder-multisite/fl-builder-multisite.php'
     var godaddy = wp_content.replace( 'wp-content', 'wp-includes' ) + 'js/tinymce/plugins/compat3x/plugin.min.js'
-
     var powerpack = wp_content + 'plugins/bbpowerpack/changelog.txt'
     var uabb = wp_content + 'plugins/bb-ultimate-addon/changelog.txt'
     var bboutput = '<h4>Scan results for ' + domain + '</h4>';
@@ -54,9 +50,7 @@
     var sub = GetSub( agency, pro )
     var tingleCSS = GM_getResourceText ("tingleCSS");
     var version = ParseResult( result )
-
     var gd_bug = fetchHeader( godaddy, 'Last-Modified' )
-
     var d = new Date(gd_bug);
     var gd_date = d.getFullYear();
 
@@ -130,7 +124,7 @@
 
         var modal = new tingle.modal({
           'footer': true,
-          'closeMethods': ['overlay', 'escape']
+          'closeMethods': ['button', 'escape']
         });
 
         url = 'https://www.yougetsignal.com/tools/web-sites-on-web-server/?remoteAddress=' + domain
@@ -143,6 +137,9 @@
             console.log('clicked')
             $('.headers-data').toggle()
         })
+        $('.tingle-modal-box').css('font-family', 'monospace');
+        $('.tingle-modal-box').css('text-color', 'black');
+        $('.tingle-modal-box__content h4').css('font-family', 'monospace');
     }
 })();
 
