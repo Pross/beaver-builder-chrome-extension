@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.4
+// @version         0.9.5
 // @author          Simon
 // @include         *
 // @grant           GM_getResourceText
@@ -32,7 +32,7 @@
     if( match !== null && typeof( match[1] ) != "undefined" ) {
         var wp_content = match[1].replace( /(https?:\/\/.*?)\//, raw_url + '/' )
     } else {
-        wp_content = window.location.href + 'wp-content'
+        wp_content = window.location.href + 'wp-content/'
         console.log('reverted to window')
     }
 
