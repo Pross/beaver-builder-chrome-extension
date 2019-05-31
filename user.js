@@ -2,12 +2,12 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.5
+// @version         0.9.6
 // @author          Simon
-// @include         *
+// @match           *://*
 // @grant           GM_getResourceText
 // @grant           GM_addStyle
-// @run-at          context-menu
+// @grant           GM_registerMenuCommand
 // @require         https://rawcdn.githack.com/robinparisi/tingle/master/dist/tingle.min.js
 // @resource        tingleCSS https://rawcdn.githack.com/robinparisi/tingle/master/dist/tingle.min.css
 // @updateURL       https://raw.githubusercontent.com/Pross/beaver-builder-chrome-extension/master/user.js
@@ -15,10 +15,17 @@
 // @require         https://code.jquery.com/jquery-1.11.0.min.js
 // ==/UserScript==]
 
+
+
 (function() {
     'use strict';
 
-    var url = window.location.href;
+    GM_registerMenuCommand('Scan Site', function() {
+        bb_detect();
+    })
+
+    function bb_detect() {
+            var url = window.location.href;
     var raw_url_match = url.match( /(https?:\/\/.*?)\// );
     var raw_url = raw_url_match[1]
     var page_content = GetResult( url )
@@ -113,8 +120,9 @@
         bboutput += '<br />' + generator + '<br />'
     }
     result = page_content
+    var cache = result.match(/<\/html>([\s\S]*)/)
+    console.log(cache)
 
-    var cache = result.match(/<\/html>(.*)$/s)
     if( typeof( cache[1] ) !== "undefined" && cache[1] !== null && '' !== cache[1] && cache[1].length > 10 ) {
         bboutput += '<br /><strong><em>Possible Cache Plugin Detected</em></strong><br /><pre>' + escapeHtml(cache[1]) + '</pre>'
     }
@@ -154,10 +162,11 @@
         $('.tingle-modal-box__content a').css('color', 'blue');
         $('.tingle-modal-box__footer a').css('color', 'blue');
         $('.tingle-modal-box__content h4').css('font-family', font);
-
-
+    }
 
     }
+
+
 })();
 
 function ParseResult( data ) {
