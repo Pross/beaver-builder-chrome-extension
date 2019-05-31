@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.6
+// @version         0.9.7
 // @author          Simon
 // @match           *://*
 // @grant           GM_getResourceText
@@ -121,7 +121,6 @@
     }
     result = page_content
     var cache = result.match(/<\/html>([\s\S]*)/)
-    console.log(cache)
 
     if( typeof( cache[1] ) !== "undefined" && cache[1] !== null && '' !== cache[1] && cache[1].length > 10 ) {
         bboutput += '<br /><strong><em>Possible Cache Plugin Detected</em></strong><br /><pre>' + escapeHtml(cache[1]) + '</pre>'
