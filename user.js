@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.8
+// @version         0.9.9
 // @author          Simon
 // @match           *
 // @include         *
@@ -137,6 +137,30 @@
         bboutput += '<div class="headers-data" style="display:none"><pre>' + headers + '</pre></div>'
     }
 
+
+    var scripts = fetchjquery( page_content );
+
+    var script_alert = '';
+
+    var jqscripts = '';
+
+    $.each( scripts, function( i,e ) {
+        var src = $(e).attr('src');
+
+        jqscripts += src + '<br />'
+        if ( ! src.match( /wp-includes\/js\/jquery\/jquery\.js/ ) ) {
+            script_alert = true;
+        }
+    })
+    if ( script_alert ) {
+        bboutput += '<br /><br /><strong>Extra jQuery version detected!!</strong>'
+    }
+
+    if( jqscripts ) {
+        bboutput += '<br><a href="#" class="reveal-jquery">Click to see jQuery scripts</a>'
+        bboutput += '<div class="jquery-data" style="display:none"><pre>' + jqscripts + '</pre></div>'
+    }
+
     if( bboutput ) {
 
         var modal = new tingle.modal({
@@ -145,13 +169,16 @@
         });
 
         url = 'https://www.yougetsignal.com/tools/web-sites-on-web-server/?remoteAddress=' + domain
-        var footer = '<a target="_blank" href="' + url + '">List all domains for this server.</a>'
+        var footer = '<a target="_blank" href="' + url + '">List all domains for this server.</a><br /><a target="_blank" href="https://validator.w3.org/nu/?doc=' + window.location.href + '">Open in W3C Validator</a>'
         GM_addStyle (tingleCSS);
         modal.setFooterContent(footer)
         modal.setContent(bboutput);
         modal.open();
         $('.reveal-headers').on('click', function(){
             $('.headers-data').toggle()
+        })
+        $('.reveal-jquery').on('click', function(){
+            $('.jquery-data').toggle()
         })
         var font = "system-ui, ---apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif";
         $('.tingle-modal-box').css('font-family', font);
@@ -311,4 +338,9 @@ function GetResult( url ) {
         }
     });
     return result;
+}
+
+function fetchjquery( content ) {
+    var scripts = content.match( /<script.*src=.*jquery\.(?:min|js).*/gm);
+    return scripts
 }
