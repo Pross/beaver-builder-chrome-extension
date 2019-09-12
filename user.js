@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.11
+// @version         0.9.12
 // @author          Simon
 // @match           *
 // @include         *
@@ -117,6 +117,11 @@
     if (generator) {
       bboutput += '<br />' + generator + '<br />'
     }
+
+    if (typeof __rocketLoaderEventCtor !== 'undefined') {
+          bboutput += '<br /><strong><em>Cloudflare Rocket JS destroyer Detected</em></strong><br />'
+    }
+
     result = page_content
     var cache = result.match(/<\/html>([\s\S]*)/)
 
