@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.13
+// @version         0.9.14
 // @author          Simon
 // @match           *
 // @include         *
@@ -348,5 +348,5 @@ function GetResult(url) {
 
 function fetchjquery(content) {
   var scripts = content.match(/<script.*src=.*\/jquery\.(min\.js|js)[\.|"|'|\?].*/gm);
-  return scripts
+  return scripts || []
 }
