@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.16
+// @version         0.9.17
 // @author          Simon
 // @match           *
 // @include         *
@@ -155,7 +155,7 @@
                 if (!src.match(/wp-includes\/js\/jquery\/jquery\.js/)) {
                     script_alert = true;
                 }
-                if (src.match(/wp-includes\/js\/jquery\/jquery\.js/) && !src.match(/\.js(ver=)/)) {
+                if (src.match(/wp-includes\/js\/jquery\/jquery\.js/) && !src.match(/\.js(\?ver=)/)) {
                     strip_alert = true;
                 }
             }
