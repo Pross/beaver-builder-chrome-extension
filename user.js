@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.17
+// @version         0.9.18
 // @author          Simon
 // @match           *
 // @include         *
@@ -172,6 +172,13 @@
 
         if (strip_alert) {
             bboutput += '<br /><br /><strong>ISSUE: CSS/JS version numbers are missing!!</strong>'
+        }
+
+        var space_check = page_content.match( /^\s+<!DOCTYPE/ );
+
+        if ( space_check ) {
+            bboutput += '<br /><br /><strong>MAJOR ISSUE: whitespace detected at start of HTML</strong>'
+
         }
 
         if (bboutput) {
