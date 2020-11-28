@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.20
+// @version         0.9.21
 // @author          Simon
 // @match           *
 // @include         *
@@ -188,7 +188,7 @@
                 'closeMethods': ['overlay', 'escape']
             });
 
-            url = 'https://www.yougetsignal.com/tools/web-sites-on-web-server/?remoteAddress + domain;
+            url = 'https://www.yougetsignal.com/tools/web-sites-on-web-server/?remoteAddress=' + domain;
             var footer = '<a target="_blank" href="' + url + '">List all domains for this server.</a><br /><a target="_blank" href="https://validator.w3.org/nu/?doc=' + window.location.href + '">Open in W3C Validator</a>'
 
             url = '<a target="_blank" href="https://www.whoishostingthis.com/#search=' + domain + '">Who hosts this website?</a>';
