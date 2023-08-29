@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.22
+// @version         0.9.23
 // @author          Simon
 // @match           *
 // @grant           GM_getResourceText
