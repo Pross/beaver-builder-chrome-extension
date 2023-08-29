@@ -5,7 +5,6 @@
 // @version         0.9.22
 // @author          Simon
 // @match           *
-// @include         *
 // @grant           GM_getResourceText
 // @grant           GM_addStyle
 // @grant           GM_registerMenuCommand
@@ -15,6 +14,7 @@
 // @downloadURL     https://raw.githubusercontent.com/Pross/beaver-builder-chrome-extension/master/user.js
 // @require         https://code.jquery.com/jquery-1.11.0.min.js
 // ==/UserScript==
+
 (function() {
     'use strict';
 
@@ -22,11 +22,14 @@
         bb_detect();
     })
 
+    var $ = window.jQuery;
+
     function bb_detect(modal) {
         var url = window.location.href;
         var raw_url_match = url.match(/(https?:\/\/.*?)\//);
         var raw_url = raw_url_match[1]
         var page_content = GetResult(url)
+        console.log(url)
         var urlParts = url.replace('http://', '').replace('https://', '').split(/[/?#]/);
         var domain = urlParts[0];
 
@@ -60,7 +63,8 @@
         var d = new Date(gd_bug);
         var gd_date = d.getFullYear();
         var generator = '';
-        var headers = fetchAllHeaders(url)
+        var headers = fetchAllHeaders(url);
+        var cookiebot = $('#Cookiebot');
 
         if (version) {
             bboutput += 'Beaver Builder <strong>' + version + '</strong> ( ' + sub + ' )<br />'
@@ -121,6 +125,10 @@
 
         if (typeof __rocketLoaderEventCtor !== 'undefined') {
             bboutput += '<br /><strong><em>Cloudflare Rocket JS destroyer Detected</em></strong><br />'
+        }
+
+        if ( cookiebot.length > 0 ) {
+             bboutput += '<br /><strong><em>Cookiebot JS detected. This will break 2.7+ Iframe UI.</em></strong><br />'
         }
 
         result = page_content
@@ -185,7 +193,7 @@
 
         if (bboutput) {
 
-            var modal = new tingle.modal({
+            modal = new tingle.modal({
                 'footer': true,
                 'closeMethods': ['overlay', 'escape']
             });
