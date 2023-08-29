@@ -51,7 +51,9 @@
         var pro = wp_content + 'plugins/bb-plugin/extensions/fl-builder-multisite/fl-builder-multisite.php'
         var godaddy = wp_content.replace('wp-content', 'wp-includes') + 'js/tinymce/plugins/compat3x/plugin.min.js'
         var powerpack = wp_content + 'plugins/bbpowerpack/changelog.txt'
+        var ppURL = 'https://wpbeaveraddons.com/change-logs/'
         var uabb = wp_content + 'plugins/bb-ultimate-addon/changelog.txt'
+        var uabbURL = 'https://www.ultimatebeaver.com/whats-new/'
         var bboutput = '<h4>Scan results for ' + domain + '</h4>';
         var result = GetResult(bbplugin)
         var sub = GetSub(agency, pro)
@@ -91,14 +93,14 @@
         version = ParseResultPowerpack(result)
 
         if (version) {
-            bboutput += 'Power Pack <strong>' + version + '</strong><br />'
+            bboutput += 'Power Pack <strong>' + version + '</strong> <a href='+ppURL+' target="_blank">Check Current Version</a><br />'
         }
 
         result = GetResult(uabb)
         version = ParseResultUabb(result)
 
         if (version) {
-            bboutput += 'UABB <strong>' + version + '</strong><br />'
+            bboutput += 'UABB <strong>' + version + '</strong> <a href='+uabbURL+' target="_blank">Check Current Version</a><br />'
         }
 
 
