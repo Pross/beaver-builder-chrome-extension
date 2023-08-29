@@ -5,6 +5,7 @@
 // @version         0.9.22
 // @author          Simon
 // @match           *
+// @include         *
 // @grant           GM_getResourceText
 // @grant           GM_addStyle
 // @grant           GM_registerMenuCommand
@@ -14,7 +15,6 @@
 // @downloadURL     https://raw.githubusercontent.com/Pross/beaver-builder-chrome-extension/master/user.js
 // @require         https://code.jquery.com/jquery-1.11.0.min.js
 // ==/UserScript==
-
 (function() {
     'use strict';
 
@@ -22,14 +22,11 @@
         bb_detect();
     })
 
-    var $ = window.jQuery;
-
     function bb_detect(modal) {
         var url = window.location.href;
         var raw_url_match = url.match(/(https?:\/\/.*?)\//);
         var raw_url = raw_url_match[1]
         var page_content = GetResult(url)
-        console.log(url)
         var urlParts = url.replace('http://', '').replace('https://', '').split(/[/?#]/);
         var domain = urlParts[0];
 
@@ -51,7 +48,9 @@
         var pro = wp_content + 'plugins/bb-plugin/extensions/fl-builder-multisite/fl-builder-multisite.php'
         var godaddy = wp_content.replace('wp-content', 'wp-includes') + 'js/tinymce/plugins/compat3x/plugin.min.js'
         var powerpack = wp_content + 'plugins/bbpowerpack/changelog.txt'
+        var ppURL = 'https://wpbeaveraddons.com/change-logs/'
         var uabb = wp_content + 'plugins/bb-ultimate-addon/changelog.txt'
+        var uabbURL = 'https://www.ultimatebeaver.com/whats-new/'
         var bboutput = '<h4>Scan results for ' + domain + '</h4>';
         var result = GetResult(bbplugin)
         var sub = GetSub(agency, pro)
@@ -61,8 +60,7 @@
         var d = new Date(gd_bug);
         var gd_date = d.getFullYear();
         var generator = '';
-        var headers = fetchAllHeaders(url);
-        var cookiebot = $('#Cookiebot');
+        var headers = fetchAllHeaders(url)
 
         if (version) {
             bboutput += 'Beaver Builder <strong>' + version + '</strong> ( ' + sub + ' )<br />'
@@ -91,14 +89,14 @@
         version = ParseResultPowerpack(result)
 
         if (version) {
-            bboutput += 'Power Pack <strong>' + version + '</strong><br />'
+            bboutput += 'Power Pack <strong>' + version + '</strong> <a href='+ppURL+' target="_blank">Check Current Version</a><br />'
         }
 
         result = GetResult(uabb)
         version = ParseResultUabb(result)
 
         if (version) {
-            bboutput += 'UABB <strong>' + version + '</strong><br />'
+            bboutput += 'UABB <strong>' + version + '</strong> <a href='+uabbURL+' target="_blank">Check Current Version</a><br />'
         }
 
 
@@ -123,10 +121,6 @@
 
         if (typeof __rocketLoaderEventCtor !== 'undefined') {
             bboutput += '<br /><strong><em>Cloudflare Rocket JS destroyer Detected</em></strong><br />'
-        }
-
-        if ( cookiebot.length > 0 ) {
-             bboutput += '<br /><strong><em>Cookiebot JS detected. This will break 2.7+ Iframe UI.</em></strong><br />'
         }
 
         result = page_content
@@ -191,7 +185,7 @@
 
         if (bboutput) {
 
-            modal = new tingle.modal({
+            var modal = new tingle.modal({
                 'footer': true,
                 'closeMethods': ['overlay', 'escape']
             });
