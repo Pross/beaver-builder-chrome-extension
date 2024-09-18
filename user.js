@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.24
+// @version         0.9.25
 // @author          Simon
 // @match           *://*/*
 // @grant           GM_getResourceText
@@ -16,7 +16,7 @@
 // ==/UserScript==
 
 (function() {
-    'use strict';
+
 
     GM_registerMenuCommand('Scan Site', function() {
         bb_detect();
@@ -55,16 +55,30 @@
         var uabb = wp_content + 'plugins/bb-ultimate-addon/changelog.txt'
         var uabbURL = 'https://www.ultimatebeaver.com/whats-new/'
         var bboutput = '<h4>Scan results for ' + domain + '</h4>';
-        var result = GetResult(bbplugin)
+        
         var sub = GetSub(agency, pro)
         var tingleCSS = GM_getResourceText("tingleCSS");
-        var version = ParseResult(result)
         var gd_bug = fetchHeader(godaddy, 'Last-Modified')
         var d = new Date(gd_bug);
         var gd_date = d.getFullYear();
         var generator = '';
         var headers = fetchAllHeaders(url);
         var cookiebot = $('#Cookiebot');
+        var body_classes = $('body').attr( 'class' );
+        var version;
+
+        if ( 'undefined' !== typeof body_classes ) {
+            version = body_classes.match( /fl-builder-([0-9-]+)/ );
+            if ( null !== version && version[1] ) {
+                version = version[1];
+            } else {
+                result = GetResult(bbplugin)
+                version = ParseResult(result)
+            }
+        } else {
+            result = GetResult(bbplugin)
+            version = ParseResult(result)
+        }
 
         if (version) {
             bboutput += 'Beaver Builder <strong>' + version + '</strong> ( ' + sub + ' )<br />'
@@ -72,16 +86,38 @@
             bboutput += 'Beaver Builder not found.<br />'
         }
 
-        result = GetResult(bbtheme)
-        version = ParseResult(result)
+        if ( 'undefined' !== typeof body_classes ) {
+            version = body_classes.match( /fl-theme-([0-9-]+)/ );
+            if ( null !== version && version[1] ) {
+                version = version[1];
+            } else {
+                result = GetResult(bbtheme)
+                version = ParseResult(result)
+            }
+        } else {
+            result = GetResult(bbtheme)
+            version = ParseResult(result)
+        }
+
+
         if (version) {
             bboutput += 'Beaver Theme <strong>' + version + '</strong><br />'
         } else {
             bboutput += 'Beaver Theme not found.<br />'
         }
 
-        result = GetResult(themer)
-        version = ParseResult(result)
+        if ( 'undefined' !== typeof body_classes ) {
+            version = body_classes.match( /fl-themer-([0-9-]+)/ );
+            if ( null !== version && version[1] ) {
+                version = version[1];
+            } else {
+                result = GetResult(themer)
+                version = ParseResult(result)
+            }
+        } else {
+            result = GetResult(themer)
+            version = ParseResult(result)
+        }
 
         if (version) {
             bboutput += 'Beaver Themer <strong>' + version + '</strong><br />'
@@ -104,8 +140,18 @@
         }
 
 
-        result = GetResult(free)
-        version = ParseResult(result)
+         if ( 'undefined' !== typeof body_classes ) {
+            version = body_classes.match( /fl-builder-lite-([0-9-]+)/ );
+            if ( null !== version && version[1] ) {
+                version = version[1];
+            } else {
+                result = GetResult(free)
+                version = ParseResult(result)
+            }
+        } else {
+            result = GetResult(free)
+            version = ParseResult(result)
+        }
 
         if (version) {
             bboutput += 'Beaver Lite <strong>' + version + '</strong><br />'
