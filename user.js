@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.26
+// @version         0.9.27
 // @author          Simon
 // @match           *://*/*
 // @grant           GM_getResourceText
@@ -12,7 +12,7 @@
 // @resource        tingleCSS https://rawcdn.githack.com/robinparisi/tingle/master/dist/tingle.min.css
 // @updateURL       https://raw.githubusercontent.com/Pross/beaver-builder-chrome-extension/master/user.js
 // @downloadURL     https://raw.githubusercontent.com/Pross/beaver-builder-chrome-extension/master/user.js
-// @require         https://code.jquery.com/jquery-1.11.0.min.js
+// @require         https://code.jquery.com/jquery-3.7.1.min.js
 // ==/UserScript==
 
 (function() {
@@ -68,7 +68,7 @@
         var version;
 
         if ( 'undefined' !== typeof body_classes ) {
-            version = body_classes.match( /fl-builder-([0-9-]+)/ );
+            version = body_classes.match( /fl-builder-([0-9a-z-]+)/ );
             if ( null !== version && version[1] ) {
                 version = version[1].replace( /\-/g, '.' );
                 console.log(version)
@@ -88,7 +88,7 @@
         }
 
         if ( 'undefined' !== typeof body_classes ) {
-            version = body_classes.match( /fl-theme-([0-9-]+)/ );
+            version = body_classes.match( /fl-theme-([0-9a-z-]+)/ );
             if ( null !== version && version[1] ) {
                 version = version[1].replace( /\-/g, '.' );
             } else {
@@ -108,7 +108,7 @@
         }
 
         if ( 'undefined' !== typeof body_classes ) {
-            version = body_classes.match( /fl-themer-([0-9-]+)/ );
+            version = body_classes.match( /fl-themer-([0-9a-z-]+)/ );
             if ( null !== version && version[1] ) {
                 version = version[1].replace( /\-/g, '.' );
             } else {
