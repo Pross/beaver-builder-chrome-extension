@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.28
+// @version         0.9.29
 // @author          Simon
 // @match           *://*/*
 // @grant           GM_getResourceText
@@ -69,9 +69,9 @@
 
         if ( 'undefined' !== typeof body_classes ) {
             version = body_classes.match( /fl-builder-([0-9a-z-]+)/ );
-            if ( null !== version && version[1] ) {
+
+            if ( false === version.indexOf( 'lite' ) < 0 && null !== version && version[1] ) {
                 version = version[1].replace( /\-/g, '.' );
-                console.log(version)
             } else {
                 result = GetResult(bbplugin)
                 version = ParseResult(result)
