@@ -70,7 +70,7 @@
         if ( 'undefined' !== typeof body_classes ) {
             version = body_classes.match( /fl-builder-([0-9a-z-]+)/ );
 
-            if ( false === version.indexOf( 'lite' ) < 0 && null !== version && version[1] ) {
+            if ( null !== version && false === version.indexOf( 'lite' ) < 0 && version[1] ) {
                 version = version[1].replace( /\-/g, '.' );
             } else {
                 result = GetResult(bbplugin)
