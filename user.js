@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.31
+// @version         0.9.32
 // @author          Simon
 // @match           *://*/*
 // @grant           GM_getResourceText
@@ -190,11 +190,17 @@
             bboutput += '<br /><strong><em>GODADDY BUG DETECTED, Last-Modified: ' + gd_bug + '</em></strong>'
         }
 
+        var validated = isValidHTML( page_content );
+
+        if ( validated ) {
+            bboutput += '<br><a href="#" class="reveal-validated">Found unclosed HTML elements! (click)</a>';
+            bboutput += '<div class="validated-data" style="display:none"><pre>' + validated + '</pre></div>'
+        }
+
         if (headers) {
             bboutput += '<br><a href="#" class="reveal-headers">Click to see HTTP Headers</a>'
             bboutput += '<div class="headers-data" style="display:none"><pre>' + headers + '</pre></div>'
         }
-
 
         var scripts = fetchjquery(page_content);
 
@@ -217,7 +223,6 @@
                 }
             }
         })
-
 
         if (jqscripts) {
             bboutput += '<br><a href="#" class="reveal-jquery">Click to see jQuery scripts</a>'
@@ -262,6 +267,9 @@
             })
             $('.reveal-jquery').on('click', function() {
                 $('.jquery-data').toggle()
+            })
+            $('.reveal-validated').on('click', function() {
+                $('.validated-data').toggle()
             })
             var font = "system-ui, ---apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif";
             $('.tingle-modal-box').css('font-family', font);
@@ -421,4 +429,42 @@ function GetResult(url) {
 function fetchjquery(content) {
     var scripts = content.match(/<script.*src=.*\/jquery\.(min\.js|js)[\.|"|'|\?].*/gm);
     return scripts || []
+}
+
+function isValidHTML(html) {
+    var formData = new FormData();
+    var result = '';
+    formData.append('out', 'json');
+    formData.append('content', html);
+    formData.append('level', 'false');
+    $.ajax({
+        url: "https://html5.validator.nu/",
+        data: formData,
+        dataType: "json",
+        type: "POST",
+        async: false,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+             // data.messages is an array
+            result = data;
+        },
+        error: function() {
+           console.warn(arguments);
+        }
+    });
+    if ( result.messages ) {
+        var messages = result.messages;
+        var results = [];
+        $.each( messages, function( i, e ) {
+            if ( 'undefined' !== typeof e ) {
+                if ( e.message.indexOf( 'Unclosed element' ) > -1 ) {
+                    results += e.message + '<br />';
+                }
+            }
+        });
+
+        return results;
+        }
+    return '';
 }
