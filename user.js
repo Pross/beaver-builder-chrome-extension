@@ -29,7 +29,6 @@
         var raw_url_match = url.match(/(https?:\/\/.*?)\//);
         var raw_url = raw_url_match[1]
         var page_content = GetResult(url)
-        console.log(url)
         var urlParts = url.replace('http://', '').replace('https://', '').split(/[/?#]/);
         var domain = urlParts[0];
 
@@ -436,7 +435,7 @@ function isValidHTML(html) {
     var result = '';
     formData.append('out', 'json');
     formData.append('content', html);
-    formData.append('level', 'false');
+    formData.append('showsource', 'yes');
     $.ajax({
         url: "https://html5.validator.nu/",
         data: formData,
@@ -459,7 +458,9 @@ function isValidHTML(html) {
         $.each( messages, function( i, e ) {
             if ( 'undefined' !== typeof e ) {
                 if ( e.message.indexOf( 'Unclosed element' ) > -1 ) {
-                    results += e.message + '<br />';
+                    let txt = e.extract.replace( /[\t\r\n\s]+/, '');
+                    txt = new Option(txt).innerHTML;
+                    results += e.message + '<br />' + txt + '<br /><br />';
                 }
             }
         });
