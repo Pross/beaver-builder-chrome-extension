@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.32
+// @version         0.9.33
 // @author          Simon
 // @match           *://*/*
 // @grant           GM_getResourceText
@@ -454,7 +454,7 @@ function isValidHTML(html) {
     });
     if ( result.messages ) {
         var messages = result.messages;
-        var results = [];
+        var results = '';
         $.each( messages, function( i, e ) {
             if ( 'undefined' !== typeof e ) {
                 if ( e.message.indexOf( 'Unclosed element' ) > -1 ) {
