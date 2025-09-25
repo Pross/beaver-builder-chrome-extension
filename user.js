@@ -2,7 +2,7 @@
 // @name            Beaver Detector
 // @namespace       http://wpbeaverbuilder.com/
 // @description     Context menu to execute UserScript
-// @version         0.9.34
+// @version         0.9.35
 // @author          Simon
 // @match           *://*/*
 // @grant           GM_getResourceText
@@ -87,7 +87,7 @@
         }
 
         if ( 'undefined' !== typeof body_classes ) {
-            version = body_classes.match( /fl-theme-([0-9a-z-]+)/ );
+            version = body_classes.match( /fl-theme-(([0-9-]+)([a-z-0-9]+))/ );
             if ( null !== version && version[1] ) {
                 version = version[1].replace( /\-/g, '.' );
             } else {
